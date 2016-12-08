@@ -16,4 +16,4 @@ class TwitterConsumer(threading.Thread):
         consumer.subscribe([config.TOPIC])
 
         for message in consumer:
-            print "CONSUMER: ", message
+            print "---------- CONSUMER: ", message
