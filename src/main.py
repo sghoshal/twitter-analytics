@@ -24,4 +24,4 @@ if __name__ == '__main__':
     time.sleep(10)
     
     # Start listening for tweets on the stream.
-    stream.filter(track=['arsenal'])
+    stream.filter(track=['barcelona'])
