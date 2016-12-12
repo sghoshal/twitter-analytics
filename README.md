@@ -36,6 +36,13 @@ NOTES:
     - When Kafka Partitions outnumber consumers
         http://stackoverflow.com/questions/21293937/apache-kafka-message-consumption-when-partitions-outnumber-consumers
 
+    - What is auto_offset_reset='smallest' in consumer config?
+
+        When a new consumer subscribes to a particular topic, and there have already been few messages published on that topic,
+        we want the consumer to receive messages from the earliest Kafka knows of. 
+        (The Kafka log retention policy will determine the earliest one)
+        SO http://stackoverflow.com/questions/32390265/what-determines-kafka-consumer-offset
+
 - Spark Streaming:
     - What is the difference between batch interval and window?
         - The data collected in batch interval time becomes a RDD in spark (called the batch here).
