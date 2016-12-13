@@ -3,7 +3,7 @@ import config
 
 from kafka import KafkaConsumer
 
-class TwitterConsumer(threading.Thread):
+class AppKafkaConsumer(threading.Thread):
     daemon = True
 
     def run(self):

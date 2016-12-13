@@ -2,7 +2,6 @@ import tweepy
 import json, string, jsonpickle
 import config
 
-from utils import JsonUtils
 from pprint import pprint
 
 class TwitterListener(tweepy.StreamListener):

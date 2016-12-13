@@ -3,12 +3,12 @@ import time
 import config, auth_keys
 
 from twitter_listener import TwitterListener
-from twitter_producer import TwitterProducer
-from twitter_consumer import TwitterConsumer
+from kafka_producer import AppKafkaProducer
+from kafka_consumer import AppKafkaConsumer
 
 if __name__ == '__main__':
     # Create the Kafka Producer
-    producer = TwitterProducer()
+    producer = AppKafkaProducer()
 
     # Set up the Twitter listener.
     twitter_listener = TwitterListener(proxyUrl=None, producer=producer)
@@ -18,10 +18,11 @@ if __name__ == '__main__':
 
     stream = tweepy.streaming.Stream(auth, twitter_listener)
 
-    # Start the Kafka Consumer
-    consumer = TwitterConsumer()
+    # Start the Kafka Consumer on a separate thread.
+    consumer = AppKafkaConsumer()
     consumer.start()
+    
     time.sleep(10)
     
     # Start listening for tweets on the stream.
-    stream.filter(track=['barcelona'])
+    stream.filter(track=['arsenal'])

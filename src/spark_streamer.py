@@ -19,7 +19,7 @@ def extract_mentions(line):
 
     # Return a list of tuples where each tuple is the mentioned user with retweet count.
     retweet_count = int(tokens[4]) if tokens[4] != '0' else 1
-    return [(str(user), retweet_count) for user in tokens[8].split(',')]
+    return [('@' + str(user), retweet_count) for user in tokens[8].split(',')]
 
 def sort_by_value(rdd):
     flipped = rdd.map(lambda (x, y): (y, x))

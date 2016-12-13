@@ -1,23 +1,39 @@
-STEPS:
+SETUP:
 
-KAFKA SETUP:
+- KAFKA:
+    - Followed the docs https://kafka.apache.org/quickstart
+    - (If running on Windows, use Powershell to get over the convoluted windows bash syntax).
 
-- Followed the docs https://kafka.apache.org/quickstart
+- TWITTER STREAMING API:
+    - Followed the first part of this tutorial - http://adilmoujahid.com/posts/2014/07/twitter-analytics/
+        - Created a Twitter app on https://apps.twitter.com/app/
+        - Got the Consumer API and Consumer secret
+        - Generated the Access Token and Access Token secret (the generated tokens are only useful for making API requests on logged in user account's behalf)
+        - Install tweepy python client (pip install tweepy)
+        - Referred to the tweepy docs - http://docs.tweepy.org/en/v3.4.0/streaming_how_to.html
 
-- (If running on Windows, use Powershell to get over the convoluted windows bash syntax). I didn't want to spend a lot of time to get it to work on GitBash/MinGW.
+- SPARK:
+    - Download from http://spark.apache.org/downloads.html
+    - Create env variable and add to path.
 
+STEPS TO RUN:
 
-TWITTER STREAMING API:
+- From $KAFKA_HOME:
+    - Start Zookeeper.
+    - Start Kafka Broker/Server.
+    - Optional - Start the consumer to see what's being streamed.
 
-- Followed the first part of this tutorial - http://adilmoujahid.com/posts/2014/07/twitter-analytics/
-    - Created a Twitter app on https://apps.twitter.com/app/
-    - Got the Consumer API and Consumer secret
-    - Generated the Access Token and Access Token secret (the generated tokens are only useful for making API requests on my account's behalf)
-    - Install tweepy python client (pip install tweepy)
-    - Referred to the tweepy docs - http://docs.tweepy.org/en/v3.4.0/streaming_how_to.html
+- Generate all tokens from apps.twitter.com/app and paste the values to src/auth_keys.py. It should look like this:
+    ACCESS_TOKEN = xxx
+    ACCESS_TOKEN_SECRET = xxx
+    CONSUMER_KEY = xxx
+    CONSUMER_SECRET = xxx
+
+- In main.py, edit the track array to tweets containing the desired words.
+- python main.py
+- spark-submit --jars ..\lib\spark-streaming-kafka-0-8-assembly_2.11-2.0.2.jar .\spark_streamer.py
 
 NOTES:
-
 - Kafka
     - Kafka important concept about Partitions, Consumers and Consumer Groups: 
       - https://www.tutorialspoint.com/apache_kafka/apache_kafka_workflow.htm
@@ -59,5 +75,5 @@ NOTES:
 
         Reference:     https://twittercommunity.com/t/is-there-a-limit-to-the-amount-of-data-the-streaming-api-will-send-out/8482
         
-        Whether you'll be streamed all the events matching those terms or not is determined by the relative volume of tweets matching those terms to the total volume of public tweets in the Firehose. The basic levels allow you to be streamed up to 1% of the total volume. Whether 30,000 people using those hashtags would result in going over 1% of the total firehose at any one moment of time or not is not necessarily determinate before the fact. You can find out some of our recent public numbers of how many tweets happen in the Firehose and try to make some estimates based on your projections.
+        "Whether you'll be streamed all the events matching those terms or not is determined by the relative volume of tweets matching those terms to the total volume of public tweets in the Firehose. The basic levels allow you to be streamed up to 1% of the total volume. Whether 30,000 people using those hashtags would result in going over 1% of the total firehose at any one moment of time or not is not necessarily determinate before the fact. You can find out some of our recent public numbers of how many tweets happen in the Firehose and try to make some estimates based on your projections."
 

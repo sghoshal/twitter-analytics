@@ -2,7 +2,7 @@ import config
 
 from kafka.producer import KafkaProducer
 
-class TwitterProducer():
+class AppKafkaProducer():
     
     def __init__(self):
 
