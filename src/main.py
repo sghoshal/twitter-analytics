@@ -1,6 +1,6 @@
 import tweepy
 import time
-import config
+import config, auth_keys
 
 from twitter_listener import TwitterListener
 from twitter_producer import TwitterProducer
@@ -13,8 +13,8 @@ if __name__ == '__main__':
     # Set up the Twitter listener.
     twitter_listener = TwitterListener(proxyUrl=None, producer=producer)
 
-    auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET)
-    auth.set_access_token(config.ACCESS_TOKEN, config.ACCESS_TOKEN_SECRET)
+    auth = tweepy.OAuthHandler(auth_keys.CONSUMER_KEY, auth_keys.CONSUMER_SECRET)
+    auth.set_access_token(auth_keys.ACCESS_TOKEN, auth_keys.ACCESS_TOKEN_SECRET)
 
     stream = tweepy.streaming.Stream(auth, twitter_listener)
 
