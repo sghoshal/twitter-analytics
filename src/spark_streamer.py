@@ -1,5 +1,5 @@
 # To run this script, the spark streaming JAR needs to be included in the classpath.
-# spark-submit --jars ..\lib\spark-streaming-kafka-0-8-assembly_2.11-2.0.2.jar .\spark_streamer.py
+# spark-submit --jars lib/spark-streaming-kafka-0-8-assembly_2.11-2.0.2.jar src/spark_streamer.py
 
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
@@ -49,6 +49,6 @@ mentions_agg.pprint()
 # Metadata checkpointing is primarily needed for recovery from driver failures, 
 # whereas data or RDD checkpointing is necessary even for basic functioning if stateful transformations are used.
 # http://spark.apache.org/docs/latest/streaming-programming-guide.html#checkpointing
-ssc.checkpoint("D:\spark-stream-checkpoint")
+ssc.checkpoint(config.SPARK_CHECKPOINT_DIR)
 ssc.start()
 ssc.awaitTermination()

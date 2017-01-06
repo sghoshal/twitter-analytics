@@ -1,12 +1,12 @@
 import tweepy
-import json, string, jsonpickle
+import json, string
 import config
 
 from pprint import pprint
 
 class TwitterListener(tweepy.StreamListener):
 
-    def __init__(self, proxyUrl=None, producer=None):
+    def __init__(self, producer=None):
         super(TwitterListener, self).__init__()
         self.producer = producer
 

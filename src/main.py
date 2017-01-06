@@ -11,7 +11,7 @@ if __name__ == '__main__':
     producer = AppKafkaProducer()
 
     # Set up the Twitter listener.
-    twitter_listener = TwitterListener(proxyUrl=None, producer=producer)
+    twitter_listener = TwitterListener(producer=producer)
 
     auth = tweepy.OAuthHandler(auth_keys.CONSUMER_KEY, auth_keys.CONSUMER_SECRET)
     auth.set_access_token(auth_keys.ACCESS_TOKEN, auth_keys.ACCESS_TOKEN_SECRET)
