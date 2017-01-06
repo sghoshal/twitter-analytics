@@ -4,9 +4,9 @@ sliding window. This is done using the Spark Streaming API.
 
 ---
 
-SETUP:
+## Setup
 
-1. KAFKA:
+### Kafka
     - Docs https://kafka.apache.org/quickstart.
     - tar the tgz file.
     - Create an env variable KAFKA_HOME in ~/.bashrc and point it to the extracted directory.
@@ -14,7 +14,7 @@ SETUP:
     - In $KAFKA_HOME/config/server.properties, add / uncomment
         `advertisers.listeners=PLAINTEXT://localhost:9092`
 
-2. TWITTER STREAMING API:
+### Twitter Streaming API
     - Followed the first part of this tutorial - http://adilmoujahid.com/posts/2014/07/twitter-analytics/
         - Created a Twitter app on https://apps.twitter.com/app/
         - Got the Consumer API and Consumer secret
@@ -22,15 +22,15 @@ SETUP:
         - Install tweepy python client (pip install tweepy)
         - Referred to the tweepy docs - http://docs.tweepy.org/en/v3.4.0/streaming_how_to.html
 
-3. SPARK:
+### Spark
     - Download from http://spark.apache.org/downloads.html
     - Create env variable and add to path.
 
 ---
 
-STEPS TO RUN:
+## STEPS TO RUN
 
-- Kafka:
+### Kafka
     - Start Zookeeper.
     - Start Kafka Broker/Server.
     - Make sure the desired topic name in config.py is created first. If not, create the topic by running:
@@ -39,18 +39,21 @@ STEPS TO RUN:
 
     - Optional - Start the consumer to see what's being streamed.
 
+### Tokens
 - Generate all tokens from apps.twitter.com/app and paste the values to src/auth_keys.py. It should look like this:
     `ACCESS_TOKEN = xxx`
     `ACCESS_TOKEN_SECRET = xxx`
     `CONSUMER_KEY = xxx`
     `CONSUMER_SECRET = xxx`
 
-- In main.py, edit the track array to tweets containing the desired words.
-
-- Install dependencies:
+### Dependencies
+- Use pip:
     - sudo pip install tweepy --ignore-installed six
         - The package 'six' is already installed by Apple - https://github.com/pypa/pip/issues/3165
     - sudo pip install kafka-python
+
+### Running the scripts
+- In main.py, edit the track array to tweets containing the desired words.
 
 - python src/main.py
 
@@ -58,10 +61,10 @@ STEPS TO RUN:
 
 ---
 
-CONCEPTS:
+## Concepts
 
-1. Kafka
-    - Kafka important concept about Partitions, Consumers and Consumer Groups: 
+### Kafka
+    - Kafka important concept about Partitions, Consumers and Consumer Groups:
       - https://www.tutorialspoint.com/apache_kafka/apache_kafka_workflow.htm
 
     - What are offsets?
@@ -71,21 +74,21 @@ CONCEPTS:
         https://kafka.apache.org/documentation (Section: Topics And Logs)
 
     - When there are more consumers than partitions:
-        - New consumers don't get any messages because each Kafka consumer is assigned only a single partition. 
+        - New consumers don't get any messages because each Kafka consumer is assigned only a single partition.
           If a consumer dies/unsubscribes and if num consumers < partition, the new consumer will start receiving messages.
         - http://spark.apache.org/docs/latest/streaming-programming-guide.html#setting-the-right-batch-interval
-        - 
+        -
     - When Kafka Partitions outnumber consumers
         http://stackoverflow.com/questions/21293937/apache-kafka-message-consumption-when-partitions-outnumber-consumers
 
     - What is auto_offset_reset='smallest' in consumer config?
 
         When a new consumer subscribes to a particular topic, and there have already been few messages published on that topic,
-        we want the consumer to receive messages from the earliest Kafka knows of. 
+        we want the consumer to receive messages from the earliest Kafka knows of.
         (The Kafka log retention policy will determine the earliest one)
         SO http://stackoverflow.com/questions/32390265/what-determines-kafka-consumer-offset
 
-2. Spark Streaming:
+### Spark Streaming
     - What is the difference between batch interval and window?
         - The data collected in batch interval time becomes a RDD in spark (called the batch here).
         - The window is a collection of batches over the window time interval.
@@ -95,7 +98,7 @@ CONCEPTS:
     - Why do we need both batch interval and window if we can increase the batch interval?
         - This is useful for spark applications that need to both stream ingestion (real time event monitoring) as well as Aggregations over the window time period. If the use case is just to do aggregations, a high batch interval would be more efficient.
 
-3. Twitter Streaming API:
+### Twitter Streaming API
     - Is there rate limiting with the Twitter Streaming API?
         - Rate limiting is applicable to the REST API. For streaming API, twitter returns about 1% of the total tweets being tweeted at the moment. 
 
