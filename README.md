@@ -1,10 +1,20 @@
+- This Python app streams tweets using Twitter's Streaming API and dispatches to a Kafka Producer.
+- A separate Spark job performs aggregations like Tweets by location and effective user mentions in real time over a
+sliding window. This is done using the Spark Streaming API.
+
+---
+
 SETUP:
 
-- KAFKA:
-    - Followed the docs https://kafka.apache.org/quickstart
-    - (If running on Windows, use Powershell to get over the convoluted windows bash syntax).
+1. KAFKA:
+    - Docs https://kafka.apache.org/quickstart.
+    - tar the tgz file.
+    - Create an env variable KAFKA_HOME in ~/.bashrc and point it to the extracted directory.
+    - Add $KAFKA_HOME/bin to the $PATH.
+    - In $KAFKA_HOME/config/server.properties, add / uncomment
+        `advertisers.listeners=PLAINTEXT://localhost:9092`
 
-- TWITTER STREAMING API:
+2. TWITTER STREAMING API:
     - Followed the first part of this tutorial - http://adilmoujahid.com/posts/2014/07/twitter-analytics/
         - Created a Twitter app on https://apps.twitter.com/app/
         - Got the Consumer API and Consumer secret
@@ -12,29 +22,45 @@ SETUP:
         - Install tweepy python client (pip install tweepy)
         - Referred to the tweepy docs - http://docs.tweepy.org/en/v3.4.0/streaming_how_to.html
 
-- SPARK:
+3. SPARK:
     - Download from http://spark.apache.org/downloads.html
     - Create env variable and add to path.
 
+---
+
 STEPS TO RUN:
 
-- From $KAFKA_HOME:
+- Kafka:
     - Start Zookeeper.
     - Start Kafka Broker/Server.
+    - Make sure the desired topic name in config.py is created first. If not, create the topic by running:
+
+    `kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic <topic_name>`
+
     - Optional - Start the consumer to see what's being streamed.
 
 - Generate all tokens from apps.twitter.com/app and paste the values to src/auth_keys.py. It should look like this:
-    ACCESS_TOKEN = xxx
-    ACCESS_TOKEN_SECRET = xxx
-    CONSUMER_KEY = xxx
-    CONSUMER_SECRET = xxx
+    `ACCESS_TOKEN = xxx`
+    `ACCESS_TOKEN_SECRET = xxx`
+    `CONSUMER_KEY = xxx`
+    `CONSUMER_SECRET = xxx`
 
 - In main.py, edit the track array to tweets containing the desired words.
-- python main.py
-- spark-submit --jars ..\lib\spark-streaming-kafka-0-8-assembly_2.11-2.0.2.jar .\spark_streamer.py
 
-NOTES:
-- Kafka
+- Install dependencies:
+    - sudo pip install tweepy --ignore-installed six
+        - The package 'six' is already installed by Apple - https://github.com/pypa/pip/issues/3165
+    - sudo pip install kafka-python
+
+- python src/main.py
+
+- spark-submit --jars lib/spark-streaming-kafka-0-8-assembly_2.11-2.0.2.jar src/spark_streamer.py
+
+---
+
+CONCEPTS:
+
+1. Kafka
     - Kafka important concept about Partitions, Consumers and Consumer Groups: 
       - https://www.tutorialspoint.com/apache_kafka/apache_kafka_workflow.htm
 
@@ -59,7 +85,7 @@ NOTES:
         (The Kafka log retention policy will determine the earliest one)
         SO http://stackoverflow.com/questions/32390265/what-determines-kafka-consumer-offset
 
-- Spark Streaming:
+2. Spark Streaming:
     - What is the difference between batch interval and window?
         - The data collected in batch interval time becomes a RDD in spark (called the batch here).
         - The window is a collection of batches over the window time interval.
@@ -69,7 +95,7 @@ NOTES:
     - Why do we need both batch interval and window if we can increase the batch interval?
         - This is useful for spark applications that need to both stream ingestion (real time event monitoring) as well as Aggregations over the window time period. If the use case is just to do aggregations, a high batch interval would be more efficient.
 
-- Twitter Streaming API:
+3. Twitter Streaming API:
     - Is there rate limiting with the Twitter Streaming API?
         - Rate limiting is applicable to the REST API. For streaming API, twitter returns about 1% of the total tweets being tweeted at the moment. 
 
