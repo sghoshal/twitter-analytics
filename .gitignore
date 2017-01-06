@@ -1,3 +1,3 @@
 auth_keys.py
 *.pyc
-
+spark-stream-checkpoint
